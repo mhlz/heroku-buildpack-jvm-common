@@ -24,6 +24,7 @@ install_java_with_overlay() {
     else
       status_pending "Installing custom JDK"
     fi
+    echo Install Java
     install_java ${buildDir} ${javaVersion} ${jdkUrl}
     jdk_overlay ${buildDir}
     status_done
@@ -43,11 +44,13 @@ install_java() {
   local jdkTarball="${jdkDir}"/jdk.tar.gz
   local javaExe="${jdkDir}/bin/java"
   mkdir -p "${jdkDir}"
+  echo checking existing java
   if [ ! -f "${jdkTarball}" ] && [ ! -f "${javaExe}" ] || is_java_version_change "${jdkDir}" "${javaVersion}"; then
     rm -rf "${jdkDir}"
     mkdir -p "${jdkDir}"
     validate_jdk_url ${jdkUrl} ${jdkVersion}
-    curl --retry 3 --silent --location ${jdkUrl} --output ${jdkTarball}
+    curl --retry 3 --location ${jdkUrl} --output ${jdkTarball}
+    echo unpacking
     tar pxzf ${jdkTarball} -C "${jdkDir}"
     rm ${jdkTarball}
     install_cacerts ${jdkDir}
@@ -60,6 +63,7 @@ install_java() {
   export JAVA_HOME=${jdkDir}
   export PATH="${jdkDir}/bin:${PATH}"
 
+echo install additional stuff
   _install_tools ${baseDir}
   _create_profile_script ${baseDir}
   _create_export_script ${JAVA_HOME} "$(pwd)"
