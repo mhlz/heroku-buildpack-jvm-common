@@ -49,6 +49,7 @@ install_java() {
     rm -rf "${jdkDir}"
     mkdir -p "${jdkDir}"
     validate_jdk_url ${jdkUrl} ${jdkVersion}
+    echo downloading from ${jdkUrl}
     curl --retry 3 --location ${jdkUrl} --output ${jdkTarball}
     echo unpacking
     tar pxzf ${jdkTarball} -C "${jdkDir}"
